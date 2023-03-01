@@ -16,10 +16,11 @@ import {
 const year = new Array(10).fill(null)
 const nowYear = new Date().getFullYear()
 interface Props {
-  data: string[]
+  carBrand: string[]
+  carInfo: string[]
 }
 const Admin = (props: Props) => {
-  const carBrand = props.data
+  const {carBrand,carInfo} = props
   const showMessage = toastAdapter((state) => state.showMessage)
   const [details, setDetails] = useState<Detail[]>([])
   const btnHandleChange = useCallback(() => {
@@ -105,11 +106,12 @@ const Admin = (props: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const carService = container.get<CarService>(CarSerSym)
-  const response = await carService.getCarBrand()
-  if (!response) throw new Error('데이터가 없어요.')
+  const [carBrand, carInfo] = await Promise.all([carService.getCarBrand(), carService.getCarInfo()])
+  if (!carBrand || !carInfo) throw new Error('데이터가 없어요.')
   return {
     props: {
-      data: response as string[],
+      carBrand,
+      carInfo
     },
   }
   // try {

@@ -7,12 +7,22 @@ export const CarSerSym = Symbol.for('CarSerSym')
 @injectable()
 export class CarService {
   FirebaseSerSym: FirebaseService
+  carInfo: string[] | undefined
   constructor(@inject(FirebaseSerSym) FirebaseSerSym: FirebaseService) {
     this.FirebaseSerSym = FirebaseSerSym
     // this.FirebaseSerSym.observeData('carBrand', (x: string[]) => this.carBrand = x)
   }
   async getCarBrand() {
-    return this.FirebaseSerSym.readData('carBrand')
+    return this.FirebaseSerSym.readData<string[]>('carBrand')
+  }
+  async getCarInfo() {
+    this.carInfo = await this.FirebaseSerSym.readData<string[]>('carInfo')
+    return this.carInfo
+  }
+  updateCarInfo(carInfo: string) {
+    this.carInfo?.push(carInfo)
+    this.FirebaseSerSym.writeData('carInfo', this.carInfo)
+    return this.carInfo;
   }
   async setCar(
     brand: string,
@@ -26,7 +36,7 @@ export class CarService {
     )
   }
 
-  async getCars(key: string) {
-    return await this.FirebaseSerSym.readData(key)
+  getCars(key: string) {
+    return this.FirebaseSerSym.readData<Car>(key)
   }
 }
