@@ -1,0 +1,4 @@
+# steps:
+#   - shell: bash
+#     env:
+#       SUPER_SECRET: ${{ secrets.SuperSecret }}
