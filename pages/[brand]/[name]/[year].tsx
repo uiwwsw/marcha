@@ -1,4 +1,4 @@
-import { toastAdapter } from '@lib/adapter/toastAdapter'
+import { toastAdapter } from '@lib/store/toastAdapter'
 import { Car } from '@lib/domain/car'
 import { CarSerSym, CarService } from '@lib/service/car'
 import { container } from '@lib/service/container'

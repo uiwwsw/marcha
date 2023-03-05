@@ -1,4 +1,4 @@
-import { toastAdapter } from '@lib/adapter/toastAdapter'
+import { toastAdapter } from '@lib/store/toastAdapter'
 import { ToastProps } from '@lib/domain/toast'
 import {
   Dispatch,

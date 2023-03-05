@@ -1,1 +1,1 @@
-export type Detail = Record<string,string>
+export type Detail = Record<string, string>

@@ -8,8 +8,10 @@ export const carInfoAdapter = create<CarInfoAdapter>((set) => ({
   carInfo: [] as string[],
   setCarInfo: (carInfo: string[]) =>
     set((state) => {
-      return { 
-        carInfo: Array.from(new Set([...state.carInfo, ...carInfo])) as string[]
-       }
+      return {
+        carInfo: Array.from(
+          new Set([...state.carInfo, ...carInfo]),
+        ) as string[],
+      }
     }),
 }))

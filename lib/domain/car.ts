@@ -7,7 +7,7 @@ export class Car {
     public readonly name: string,
     public readonly brand: string,
     public readonly year: string,
-    public readonly details: Detail
+    public readonly details: Detail,
   ) {
     this.thumbnail = `/assets/${brand}/${name}/${year}/thumbnail.jpg`
     this.logo = `/assets/${brand}/logo.jpg`
