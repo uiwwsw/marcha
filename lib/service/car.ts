@@ -19,21 +19,27 @@ export class CarService {
     this.carInfo = await this.FirebaseSerSym.readData<string[]>('carInfo')
     return this.carInfo
   }
-  updateCarInfo(carInfo: string) {
-    this.carInfo?.push(carInfo)
-    this.FirebaseSerSym.writeData('carInfo', this.carInfo)
+  updateCarInfo(carInfo: string[]) {
+    this.carInfo = [...(this.carInfo ?? []), ...carInfo]
+    this.FirebaseSerSym.writeData('carInfo', Array.from(new Set(this.carInfo)))
     return this.carInfo;
   }
   async setCar(
     brand: string,
     name: string,
     year: string,
-    ...details: Detail[]
+    details:Detail
   ) {
-    await this.FirebaseSerSym.writeData(
-      `${brand}/${name}/${year}`,
-      new Car(name, brand, year, ...details),
-    )
+    
+    await Promise.all([
+      this.FirebaseSerSym.writeData(
+        `${brand}/${name}/${year}`,
+        new Car(name, brand, year, details),
+      ),
+      this.updateCarInfo(
+        Object.keys(details)
+      )
+    ]);
   }
 
   getCars(key: string) {

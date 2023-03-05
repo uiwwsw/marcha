@@ -1,4 +1,1 @@
-export interface Detail {
-  key: string
-  value: string
-}
+export type Detail = Record<string,string>

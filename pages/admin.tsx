@@ -1,17 +1,10 @@
+import { carInfoAdapter } from '@lib/adapter/carInfoAdapter'
 import { toastAdapter } from '@lib/adapter/toastAdapter'
-import { Detail } from '@lib/domain/detail'
 import { CarSerSym, CarService } from '@lib/service/car'
 import { container } from '@lib/service/container'
 import { GetServerSideProps } from 'next'
 import {
-  ChangeEvent,
-  ChangeEventHandler,
-  FormEvent,
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
+  ChangeEvent, FormEvent, useCallback, useEffect, useState
 } from 'react'
 const year = new Array(10).fill(null)
 const nowYear = new Date().getFullYear()
@@ -20,14 +13,22 @@ interface Props {
   carInfo: string[]
 }
 const Admin = (props: Props) => {
-  const {carBrand,carInfo} = props
-  const showMessage = toastAdapter((state) => state.showMessage)
-  const [details, setDetails] = useState<Detail[]>([])
-  const btnHandleChange = useCallback(() => {
-    setDetails([...details, { key: '키없음', value: '값없음' }])
+  const {carBrand} = props
+  const {carInfo, setCarInfo} = carInfoAdapter((state) => state);
+  useEffect(() => {
+    return () => setCarInfo(props.carInfo)
   }, [])
+  const showMessage = toastAdapter((state) => state.showMessage)
+  const [details, setDetails] = useState<{key:string;value:string}[]>([])
+  const addHandleChange = useCallback(() => {
+    setDetails([...details, { key: '', value: '' }])
+  }, [details])
+  const removeHandleChange = useCallback(() => {
+    details.pop();
+    setDetails([...details])
+  }, [details])
   const keyInputHandleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>, key: string, index: number) => {
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>, key: string, index: number) => {
       details[index].key = e.target.value
       setDetails([...details])
     },
@@ -51,7 +52,7 @@ const Admin = (props: Props) => {
       const year = form.carYear.value as string
       const carService = container.get<CarService>(CarSerSym)
 
-      await carService.setCar(brand, name, year, ...details)
+      await carService.setCar(brand, name, year, details.reduce((a,v) => ({...a,[v.key]:v.value}), {}))
       showMessage({ message: '작성완료' })
       form.reset()
     },
@@ -72,22 +73,35 @@ const Admin = (props: Props) => {
       <br />
       <select name="carYear" id="carYear" required>
         {year.map((_, i) => (
-          <option key={nowYear - i} value={nowYear - i}>
+          <option selected={i === 0} key={nowYear - i} value={nowYear - i}>
             {nowYear - i}
           </option>
         ))}
       </select>
-      <button onClick={btnHandleChange}>ddd</button>
+      <button type='button' onClick={addHandleChange}>더하기</button>
+      <button type='button' onClick={removeHandleChange}>빼기</button>
       {details.map((x, i) => (
         <div key={i + 'customInput'}>
-          <label htmlFor={x.key}>{x.key}</label>
-          <input
-            type="text"
-            id={x.key}
-            name={x.key}
-            required
-            onChange={(e) => keyInputHandleChange(e, x.key, i)}
-          />
+          {/* carInfo */}
+          {carInfo.concat('').includes(x.key) ? 
+            <select onChange={(e) => keyInputHandleChange(e, x.key, i)}>
+              <option value="" selected={true}>키없음</option>
+              <option value="신규">추가하기</option>
+              {carInfo?.map(x => <option key={x} value={x}>{x}</option>)}
+            </select>
+            :
+            <>
+              <label htmlFor={x.key}>{x.key}</label>
+              <input
+                type="text"
+                id={x.key}
+                name={x.key}
+                required
+                onChange={(e) => keyInputHandleChange(e, x.key, i)}
+              />
+            </>
+          }
+          
           <label htmlFor={x.value}>{x.value}</label>
           <input
             type="text"

@@ -3,18 +3,19 @@ import { Detail } from './detail'
 export class Car {
   thumbnail: string
   logo: string
-  spec: Set<string>
   constructor(
     public readonly name: string,
     public readonly brand: string,
     public readonly year: string,
-    ...details: Detail[]
+    public readonly details: Detail
   ) {
     this.thumbnail = `/assets/${brand}/${name}/${year}/thumbnail.jpg`
     this.logo = `/assets/${brand}/logo.jpg`
-    this.spec = new Set(details.map((x) => x.value).concat(name, brand, year))
+  }
+  get keywords() {
+    return Object.keys(this.details).concat(this.name, this.brand, this.year)
   }
   onSearch(query: string) {
-    return this.spec.has(query)
+    return this.keywords.includes(query)
   }
 }

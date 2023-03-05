@@ -1,4 +1,4 @@
-import { ToastProps, ToastTheme } from '@lib/domain/toast'
+import { ToastProps } from '@lib/domain/toast'
 import { create } from 'zustand'
 export type ToastAdapter = {
   messages: ToastProps[]
