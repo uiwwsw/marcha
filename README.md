@@ -1,15 +1,5 @@
 # marcha
 
-<!-- repository-presentation:start -->
-
-> 자동차 브랜드·모델·연식별 정보를 탐색하는 Next.js 웹 프로젝트.
-
-![Next.js](https://img.shields.io/badge/Next.js-252525?style=flat-square) ![React](https://img.shields.io/badge/React-087ea4?style=flat-square)
-
-[Source](https://github.com/uiwwsw/marcha/tree/main) · [Issues](https://github.com/uiwwsw/marcha/issues) · [License](./LICENSE)
-
-<!-- repository-presentation:end -->
-
 세상 모든 자동차
 
 ## 개발 환경 및 실행
